@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NeuroScan • Brain Tumor Assistant</title>
+    <style>
+        :root {
+            --bg: #f6f7f9;
+            --panel: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --brand: #22c55e;
+            --brand-dark: #16a34a;
+            --border: #e6e9ef;
+            --shadow: 0 10px 24px rgba(16, 24, 40, 0.06);
+            --radius: 14px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            color: var(--text);
+            background: var(--bg);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 24px 32px; }
+        /* header */
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 0 18px; }
+        .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+        .logo-badge { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, var(--brand), #7dd3fc); color: #fff; box-shadow: var(--shadow); }
+        .nav { display: flex; gap: 18px; color: var(--muted); font-weight: 600; }
+        .nav a { color: inherit; text-decoration: none; padding: 8px 10px; border-radius: 8px; }
+        .nav a.active { color: var(--text); background: #eef2f6; }
+
+        /* layout */
+        .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
+        @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+        /* hero banner */
+        .hero { background: linear-gradient(90deg, #16a34a, #22c55e); color: #fff; border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); }
+        .hero h1 { margin: 0 0 8px; font-size: 28px; }
+        .hero p { margin: 0 0 14px; color: rgba(255,255,255,.9); }
+        .hero .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
+        .btn.primary { background: #fff; color: #065f46; }
+        .btn.ghost { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.25); }
+
+        /* side card */
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
+        .card h3 { margin: 0 0 10px; font-size: 16px; }
+        .card .cta { display: inline-block; margin-top: 10px; padding: 10px 12px; background: var(--brand); color: #fff; border-radius: 10px; font-weight: 700; text-decoration: none; }
+
+        /* actions row */
+        .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+        @media (max-width: 980px) { .actions { grid-template-columns: 1fr; } }
+        .tile { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; text-align: left; box-shadow: var(--shadow); }
+        .tile h4 { margin: 12px 0 6px; }
+        .tile p { margin: 0; color: var(--muted); }
+
+        /* scan card */
+        .scan { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-top: 20px; }
+        .scan h2 { margin: 0 0 8px; font-size: 18px; }
+        .drop { border: 2px dashed #cdd7e3; border-radius: 12px; padding: 24px; background: #f9fbfd; text-align: center; }
+        .scan .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: flex-start; margin-top: 12px; }
+        .scan input[type="file"] { padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
+        .scan button { background: var(--brand); color: #fff; padding: 10px 14px; border-radius: 10px; border: 0; font-weight: 700; cursor: pointer; }
+        .scan button:hover { background: var(--brand-dark); }
+
+        /* results */
+        .results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 20px; }
+        @media (max-width: 980px) { .results { grid-template-columns: 1fr; } }
+        .imgcard { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; box-shadow: var(--shadow); }
+        .imgcard h5 { margin: 0 0 8px; font-size: 14px; color: #0b1220; }
+        .imgwrap { width: 100%; background: #f3f5f8; border: 1px solid var(--border); border-radius: 10px; display: grid; place-items: center; overflow: auto; }
+        .imgwrap img { max-width: 100%; height: auto; max-height: 80vh; object-fit: contain; display: block; }
+
+        .footer { text-align: center; margin-top: 26px; color: var(--muted); font-size: 12px; }
+        a { text-decoration: none; }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Simple, self-contained dashboard-style UI -->
+    <!-- All Flask bindings preserved: /predict, file, uploaded_image, result_image -->
+    </head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-badge">🧠</div>
+                NeuroScan
+            </div>
+            <nav class="nav">
+                <a class="active" href="/">Home</a>
+                <a href="#scan">Scan</a>
+                <a href="#kb">Knowledge</a>
+            </nav>
+        </div>
+
+        <div class="grid">
+            <section class="hero">
+                <h1>Good Morning, Doctor!</h1>
+                <p>Your AI assistant is ready to help segment brain tumor regions for rapid review.</p>
+                <div class="btns">
+                    <a class="btn primary" href="#scan">Start a Scan</a>
+                    <a class="btn ghost" href="#kb">View Knowledge Base</a>
+                </div>
+            </section>
+            <aside class="card">
+                <h3>Guidelines</h3>
+                <div style="color:var(--muted); font-size:14px; line-height:1.5;">
+                    • Use axial T1/T2 slices.<br>
+                    • Ensure PHI is masked.<br>
+                    • Results are for clinical support only.
+                </div>
+                <a class="cta" href="#kb">Read Best Practices</a>
+            </aside>
+        </div>
+
+        <div class="actions">
+            <div class="tile">
+                <div style="font-size:28px">📷</div>
+                <h4>Scan Image</h4>
+                <p>Upload MRI image for tumor segmentation.</p>
+            </div>
+            <div class="tile">
+                <div style="font-size:28px">📊</div>
+                <h4>Review Results</h4>
+                <p>Compare original and overlay side-by-side.</p>
+            </div>
+            <div class="tile">
+                <div style="font-size:28px">📚</div>
+                <h4 id="kb">Knowledge Base</h4>
+                <p>Learn how the model works and its limitations.</p>
+            </div>
+        </div>
+
+        <section id="scan" class="scan">
+            <h2>Scan Brain MRI</h2>
+            <div class="drop">Drag & drop an image or choose a file</div>
+            <form action="/predict" method="post" enctype="multipart/form-data" class="controls">
+                <input type="file" name="file" accept="image/*" required>
+                <button type="submit">Analyze Image</button>
+            </form>
+        </section>
+
+        {% if uploaded_image or result_image %}
+        <div style="margin-top: 18px; font-weight: 700;">Results</div>
+        <div class="results">
+            {% if uploaded_image %}
+            <div class="imgcard">
+                <h5>Original Image</h5>
+                <div class="imgwrap">
+                    <img src="{{ uploaded_image }}" alt="Uploaded MRI image">
+                </div>
+            </div>
+            {% endif %}
+            {% if result_image %}
+            <div class="imgcard">
+                <h5>Segmentation Overlay</h5>
+                <div class="imgwrap">
+                    <img src="{{ result_image }}" alt="Segmentation result">
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="footer">For clinical decision support only; not for primary diagnosis.</div>
+    </div>
+</body>
+</html>
